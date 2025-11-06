@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>منصة إدارة المهام</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" data-theme="light">
+      <aside class="sidebar">
+        <header class="branding">
+          <h1>مهامي</h1>
+          <button class="theme-toggle" aria-label="تبديل الوضع">
+            <span class="icon-sun" aria-hidden="true">☀️</span>
+            <span class="icon-moon" aria-hidden="true">🌙</span>
+          </button>
+        </header>
+        <section class="pomodoro" aria-label="مؤقت بومودورو">
+          <h2>وضع التركيز</h2>
+          <div class="pomodoro-display">
+            <span class="pomodoro-minutes">25</span>
+            <span class="separator">:</span>
+            <span class="pomodoro-seconds">00</span>
+          </div>
+          <div class="pomodoro-controls">
+            <button class="btn primary" data-action="start">بدء</button>
+            <button class="btn" data-action="pause">إيقاف</button>
+            <button class="btn" data-action="reset">إعادة</button>
+          </div>
+        </section>
+        <section class="filters" aria-label="خيارات التصفية">
+          <h2>التصفية</h2>
+          <div class="filter-group">
+            <label for="filter-status">الحالة</label>
+            <select id="filter-status">
+              <option value="all">الكل</option>
+              <option value="active">نشط</option>
+              <option value="completed">منجز</option>
+              <option value="overdue">متأخر</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-priority">الأولوية</label>
+            <select id="filter-priority">
+              <option value="all">الكل</option>
+              <option value="low">منخفضة</option>
+              <option value="medium">متوسطة</option>
+              <option value="high">مرتفعة</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-date">حتى تاريخ</label>
+            <input type="date" id="filter-date" />
+          </div>
+          <div class="filter-group">
+            <label for="filter-tags">الوسوم</label>
+            <div id="filter-tags" class="tag-filter"></div>
+          </div>
+          <button class="btn ghost clear-filters">مسح التصفية</button>
+        </section>
+        <section class="export-section" aria-label="تصدير المهام">
+          <h2>تصدير</h2>
+          <div class="export-actions">
+            <button class="btn" data-export="json">JSON</button>
+            <button class="btn" data-export="csv">CSV</button>
+          </div>
+        </section>
+      </aside>
+      <main class="content">
+        <section class="loader" aria-hidden="true">
+          <div class="skeleton skeleton-header"></div>
+          <div class="skeleton skeleton-toolbar"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </section>
+        <section class="task-board">
+          <header class="toolbar">
+            <div class="search-wrapper">
+              <input
+                type="search"
+                id="task-search"
+                placeholder="ابحث عن مهمة..."
+                aria-label="بحث"
+              />
+            </div>
+            <button class="btn primary open-task-modal">مهمة جديدة</button>
+          </header>
+          <section class="stats" aria-label="إحصائيات">
+            <canvas id="completion-chart" width="280" height="280"></canvas>
+            <div class="stats-summary">
+              <div class="stat-card">
+                <span class="stat-label">إجمالي المهام</span>
+                <span class="stat-value" data-stat="total">0</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">منجزة</span>
+                <span class="stat-value" data-stat="completed">0</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">متأخرة</span>
+                <span class="stat-value" data-stat="overdue">0</span>
+              </div>
+            </div>
+          </section>
+          <ul class="task-list" id="task-list" aria-live="polite"></ul>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal" data-modal="task">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <header class="modal-header">
+          <h2 id="modal-title">مهمة جديدة</h2>
+          <button class="modal-close" aria-label="إغلاق">×</button>
+        </header>
+        <form class="task-form">
+          <label>
+            العنوان
+            <input type="text" name="title" required />
+          </label>
+          <label>
+            الوصف
+            <textarea name="description" rows="3"></textarea>
+          </label>
+          <div class="form-row">
+            <label>
+              التاريخ
+              <input type="date" name="dueDate" required />
+            </label>
+            <label>
+              الأولوية
+              <select name="priority">
+                <option value="low">منخفضة</option>
+                <option value="medium" selected>متوسطة</option>
+                <option value="high">مرتفعة</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            الوسوم (افصل بينها بفاصلة)
+            <input type="text" name="tags" placeholder="عمل، عاجل، شخصي..." />
+          </label>
+          <footer class="modal-footer">
+            <button type="button" class="btn ghost modal-close">إلغاء</button>
+            <button type="submit" class="btn primary">حفظ</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <div class="notification-tray" aria-live="assertive"></div>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
